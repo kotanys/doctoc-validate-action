@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 cd "$GITHUB_WORKSPACE/repo" || exit 3
-shopt -s globstar
+shopt -s globstar nullglob
 
 readonly DOCTOC=$GITHUB_WORKSPACE/node_modules/.bin/doctoc
 command -v "$DOCTOC" || exit
@@ -18,7 +18,7 @@ check-file() {
     local file=$1
     local workfile
     workfile=$(mktemp -p "$TEMP_DIR")
-    cat "$file" >"$workfile"
+    cat "$file" >"$workfile" || return 1
     run-doctoc "$workfile" >/dev/null || return 1
 
     declare -g REPLY
@@ -44,15 +44,14 @@ print-bad-files() {
         for file in "${bad_files[@]}"; do
             echo "  $file"
         done
-        return 1
     fi
 }
 
 main() {
     local file
-    local -a patterns
-    local bad_files=()
+    local -a patterns bad_files
     IFS=: read -r -a patterns <<<"$INPUT_FILES"
+
     for pattern in "${patterns[@]}"; do
         for file in $pattern; do
             validate-file-name "$file" || exit
@@ -71,11 +70,9 @@ main() {
             fi
         done
     done
-    
+
     print-bad-files
+    (( ${#bad_files} == 0 ))
 }
 
-echo "validating based on pattern list: $INPUT_FILES"
-echo "doctoc args: $INPUT_ARGS"
-echo "---"
 main
