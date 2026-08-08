@@ -1,0 +1,33 @@
+name: Test the action
+
+on: 
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-valid:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./
+        with:
+          args: '--github'
+          version: '2.5.0'
+          files: 'test_files/*.md:test_files/valid_subdir/**'
+  test-fail:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./
+        id: failing-action
+        with:
+          args: '--github'
+          version: '2.5.0'
+          files: 'test_files/invalid/*.md'
+          print-diff: true
+        continue-on-error: true
+      - name: Check that doctoc-validate failed
+        run: "[[ ${{ steps.failing-action.outcome }} == failure ]]"
+        shell: bash

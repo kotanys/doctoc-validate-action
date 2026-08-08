@@ -1,0 +1,36 @@
+name: Doctoc Validate
+description: GitHub Action to validate doctoc-generated TOCs
+author: kotanys
+
+inputs:
+  files:
+    description: Colon-separated list of shell patterns to check
+    required: true
+  version:
+    description: Doctoc version
+    required: true
+  args:
+    description: CLI args to pass to doctoc. Unsanitized args can lead to arbitrary code execution!
+  print-diff:
+    description: Print a diff if validation failed
+    default: false
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v7
+      with:
+        path: 'repo'
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '24'
+    - name: Get doctoc
+      run: npm i "doctoc@${{ inputs.version }}"
+      shell: bash
+    - name: Do validation
+      run: ${{github.action_path}}/doctoc-validate.sh
+      shell: bash
+      env:
+        INPUT_FILES: ${{ inputs.files }}
+        INPUT_ARGS: ${{ inputs.args }}
+        INPUT_PRINT_DIFF: ${{ inputs.print-diff }}
