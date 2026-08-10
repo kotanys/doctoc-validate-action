@@ -4,7 +4,10 @@ cd "$GITHUB_WORKSPACE/repo" || exit 3
 shopt -s globstar nullglob
 
 readonly DOCTOC=$GITHUB_WORKSPACE/node_modules/.bin/doctoc
-command -v "$DOCTOC" || exit
+command -v "$DOCTOC" >/dev/null || {
+    echo "Doctoc not found under $DOCTOC!"
+    exit 1
+} >&2
 
 TEMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TEMP_DIR"' EXIT
