@@ -1,6 +1,9 @@
 name: Doctoc Validate
 description: GitHub Action to validate doctoc-generated TOCs
 author: kotanys
+branding:
+  color: yellow
+  icon: align-left
 
 inputs:
   files:
