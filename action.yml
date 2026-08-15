@@ -10,7 +10,7 @@ inputs:
     description: Doctoc version
     required: true
   args:
-    description: CLI args to pass to doctoc. Unsanitized args can lead to arbitrary code execution!
+    description: CLI args to pass to doctoc
   print-diff:
     description: Print a diff if validation failed
     default: false
