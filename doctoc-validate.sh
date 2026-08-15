@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 cd "$GITHUB_WORKSPACE/repo" || exit 3
-shopt -s globstar nullglob
+
+shopt -s globstar nullglob extglob globskipdots
+shopt -u dotglob failglob nocaseglob
 
 readonly DOCTOC=$GITHUB_WORKSPACE/node_modules/.bin/doctoc
 command -v "$DOCTOC" >/dev/null || {
