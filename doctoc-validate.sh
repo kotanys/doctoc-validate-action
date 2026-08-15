@@ -8,7 +8,7 @@ shopt -u dotglob failglob nocaseglob
 readonly DOCTOC=${DOCTOC:-$GITHUB_WORKSPACE/node_modules/.bin/doctoc}
 command -v "$DOCTOC" >/dev/null || {
     echo "Doctoc not found under $DOCTOC!"
-    exit 1
+    exit 5
 } >&2
 
 TEMP_DIR=$(mktemp -d)

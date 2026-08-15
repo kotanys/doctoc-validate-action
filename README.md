@@ -7,10 +7,9 @@ enforce up-to-date TOCs in CI.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+Table of contents
 
 - [Usage](#usage)
-  - [Inputs](#inputs)
 - [Glob patterns](#glob-patterns)
 - [Scenarios](#scenarios)
   - [Validate a single file](#validate-a-single-file)
@@ -41,26 +40,20 @@ enforce up-to-date TOCs in CI.
 
 ## Glob patterns
 
-Each pattern from the `files` input is expanded by bash, so
-the usual shell globbing applies. The following shell options are set:
+Each pattern from the `files` input is expanded by bash, so the usual shell
+globbing applies. Among others, the following shell options are set:
 
 - `globstar` is **enabled** — `**` matches any number of directories, so
-  `docs/**` matches everything under `docs` recursively.
+  `docs/**` matches everything under `docs` recursively. This includes
+  directories themselves (e.g. `docs/`), but those are skipped with
+  a note in the output.
 - `nullglob` is **enabled** — a pattern that matches no files expands to
   *nothing* instead of staying literal. As a consequence, a pattern that
-  matches no files is silently skipped and **nothing is validated**. A typo in
-  your pattern will therefore pass the check without warning, so double-check
-  that your patterns actually match the files you intend to validate.
-- `dotglob` is **disabled** — `*` and `**` do not match hidden files (dotfiles).
-- `extglob` is **enabled** — extended patterns such as `@(foo|bar)`,
-  `!(*.md)` or `+(foo)` are supported.
-- `globskipdots` is **enabled** — `**` does not descend into hidden directories.
-- `failglob` is **disabled** — an unmatched pattern does not error out; it
-  silently expands to nothing (see `nullglob`).
-- `nocaseglob` is **disabled** — matching is case-sensitive.
+  matches no files is silently skipped and **nothing is validated**.
 
-Note that the patterns are split on `:`, so a literal `:` cannot appear inside
-a pattern (may be implemented later if it happens to be needed).
+> [!WARNING]
+> Patterns cannot contain `:`, spaces, tabs, and newlines.
+> This limitation may be lifted later if it becomes a problem.
 
 ## Scenarios
 
@@ -88,6 +81,7 @@ a pattern (may be implemented later if it happens to be needed).
 - uses: kotanys/doctoc-validate-action@v1
   with:
     version: '2.5.0'
+    args: '--github'
     files: 'README.md:docs/**'
     print-diff: true
 ```

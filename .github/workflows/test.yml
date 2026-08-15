@@ -15,7 +15,7 @@ jobs:
         with:
           args: '--github'
           version: '2.5.0'
-          files: 'test_files/*.md:test_files/valid_subdir/**'
+          files: 'README.md:test_files/*.md:test_files/valid_subdir/**'
   test-fail:
     runs-on: ubuntu-latest
     steps:
